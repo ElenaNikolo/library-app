@@ -12,6 +12,7 @@ from app.models.category import Category
 from app.models.loan import LOAN_PERIOD_DAYS, Loan, LoanStatus
 from app.models.member import Member
 from app.models.user import User, UserRole
+from app.security import hash_password
 
 session = SessionLocal()
 
@@ -258,42 +259,50 @@ dune_copy.status = CopyStatus.ON_LOAN
 copies[f"{harry_potter.isbn}-4"].status = CopyStatus.LOST
 
 # --- Χρήστες ---
+# Κοινός κωδικός για όλους τους δοκιμαστικούς λογαριασμούς.
+DEMO_PASSWORD = "Library2026!"
 
 admin = User(
     username="admin",
     email="admin@library.gr",
-    password_hash="placeholder",
+    password_hash=hash_password(DEMO_PASSWORD),
     role=UserRole.ADMIN,
+)
+librarian = User(
+    username="librarian",
+    email="librarian@library.gr",
+    password_hash=hash_password(DEMO_PASSWORD),
+    role=UserRole.LIBRARIAN,
 )
 maria = User(
     username="maria",
     email="maria@example.com",
-    password_hash="placeholder",
+    password_hash=hash_password(DEMO_PASSWORD),
     role=UserRole.MEMBER,
 )
 giorgos = User(
     username="giorgos",
     email="giorgos@example.com",
-    password_hash="placeholder",
+    password_hash=hash_password(DEMO_PASSWORD),
     role=UserRole.MEMBER,
 )
 eleni = User(
     username="eleni",
     email="eleni@example.com",
-    password_hash="placeholder",
+    password_hash=hash_password(DEMO_PASSWORD),
     role=UserRole.MEMBER,
 )
 nikos = User(
     username="nikos",
     email="nikos@example.com",
-    password_hash="placeholder",
+    password_hash=hash_password(DEMO_PASSWORD),
     role=UserRole.MEMBER,
 )
 
-users = [admin, maria, giorgos, eleni, nikos]
+users = [admin, librarian, maria, giorgos, eleni, nikos]
 
 # --- Μέλη ---
-# Ο admin δεν είναι μέλος της βιβλιοθήκης, οπότε δεν έχει προφίλ.
+# Ο admin και ο librarian δεν έχουν προφίλ μέλους.
 # Οι ημερομηνίες εγγραφής είναι παλαιότερες από τους δανεισμούς.
 
 maria_member = Member(
