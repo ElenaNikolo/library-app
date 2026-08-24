@@ -3,6 +3,7 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.models.book_copy import BookCopy
 from app.models.loan import Loan, LoanStatus
 
 
@@ -27,6 +28,10 @@ class LoanRepository:
         if status:
             query = query.where(Loan.status == status)
 
+        return list(self.db.scalars(query.order_by(Loan.loan_date.desc())))
+
+    def get_by_book(self, book_id: int) -> list[Loan]:
+        query = select(Loan).join(BookCopy).where(BookCopy.book_id == book_id)
         return list(self.db.scalars(query.order_by(Loan.loan_date.desc())))
 
     def get_overdue(self) -> list[Loan]:

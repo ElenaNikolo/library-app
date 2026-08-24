@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class CategoryResponse(BaseModel):
@@ -15,6 +15,21 @@ class AuthorResponse(BaseModel):
     id: int
     first_name: str
     last_name: str
+
+
+class AuthorCreate(BaseModel):
+    first_name: str = Field(min_length=1, max_length=60)
+    last_name: str = Field(min_length=1, max_length=60)
+
+
+class BookCreate(BaseModel):
+    isbn: str = Field(min_length=10, max_length=20)
+    title: str = Field(min_length=1, max_length=200)
+    publisher: str | None = Field(default=None, max_length=120)
+    publication_year: int | None = None
+    description: str | None = None
+    category_id: int
+    author_ids: list[int]
 
 
 class BookResponse(BaseModel):
