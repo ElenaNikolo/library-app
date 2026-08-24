@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 
+from app.routers import auth
+
 app = FastAPI(title="Βιβλιοθήκη")
+
+app.include_router(auth.router)
 
 
 @app.get("/health")
