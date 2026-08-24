@@ -6,6 +6,9 @@ from app.models.book import Book
 from app.schemas.catalog import (
     AuthorCreate,
     AuthorResponse,
+    BookCopyCreate,
+    BookCopyResponse,
+    BookCopyUpdate,
     BookCreate,
     BookResponse,
     CategoryResponse,
@@ -125,4 +128,50 @@ def delete_book(book_id: int, db: Session = Depends(get_db)):
     try:
         catalog.delete_book(db, book)
     except catalog.BookHasLoansError as error:
+        raise HTTPException(status_code=409, detail=str(error))
+
+
+@router.get(
+    "/books/{book_id}/copies",
+    response_model=list[BookCopyResponse],
+    dependencies=[Depends(require_staff)],
+)
+def list_copies(book_id: int, db: Session = Depends(get_db)):
+    book = catalog.get_book(db, book_id)
+    if book is None:
+        raise HTTPException(status_code=404, detail="Το βιβλίο δεν βρέθηκε")
+
+    return catalog.list_copies(db, book.id)
+
+
+@router.post(
+    "/books/{book_id}/copies",
+    response_model=BookCopyResponse,
+    status_code=201,
+    dependencies=[Depends(require_staff)],
+)
+def create_copy(book_id: int, data: BookCopyCreate, db: Session = Depends(get_db)):
+    book = catalog.get_book(db, book_id)
+    if book is None:
+        raise HTTPException(status_code=404, detail="Το βιβλίο δεν βρέθηκε")
+
+    try:
+        return catalog.create_copy(db, book, data)
+    except catalog.CopyCodeExistsError as error:
+        raise HTTPException(status_code=409, detail=str(error))
+
+
+@router.put(
+    "/copies/{copy_id}",
+    response_model=BookCopyResponse,
+    dependencies=[Depends(require_staff)],
+)
+def update_copy(copy_id: int, data: BookCopyUpdate, db: Session = Depends(get_db)):
+    copy = catalog.get_copy(db, copy_id)
+    if copy is None:
+        raise HTTPException(status_code=404, detail="Το αντίτυπο δεν βρέθηκε")
+
+    try:
+        return catalog.update_copy_status(db, copy, data)
+    except catalog.CopyOnLoanError as error:
         raise HTTPException(status_code=409, detail=str(error))

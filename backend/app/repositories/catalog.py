@@ -86,6 +86,11 @@ class BookCopyRepository:
             )
         )
 
+    def get_by_code(self, copy_code: str) -> BookCopy | None:
+        return self.db.scalars(
+            select(BookCopy).where(BookCopy.copy_code == copy_code)
+        ).first()
+
     def add(self, copy: BookCopy) -> BookCopy:
         self.db.add(copy)
         return copy

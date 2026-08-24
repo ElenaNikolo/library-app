@@ -1,4 +1,8 @@
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
+
+from app.models.book_copy import CopyStatus
 
 
 class CategoryResponse(BaseModel):
@@ -43,3 +47,19 @@ class BookResponse(BaseModel):
     authors: list[AuthorResponse]
     total_copies: int
     available_copies: int
+
+
+class BookCopyResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    copy_code: str
+    status: CopyStatus
+
+
+class BookCopyCreate(BaseModel):
+    copy_code: str = Field(min_length=1, max_length=30)
+
+
+class BookCopyUpdate(BaseModel):
+    status: Literal[CopyStatus.AVAILABLE, CopyStatus.LOST]

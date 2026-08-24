@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.models.author import Author
 from app.models.book import Book
-from app.models.book_copy import CopyStatus
+from app.models.book_copy import BookCopy, CopyStatus
 from app.models.category import Category
 from app.repositories.catalog import (
     AuthorRepository,
@@ -11,7 +11,7 @@ from app.repositories.catalog import (
     CategoryRepository,
 )
 from app.repositories.loans import LoanRepository
-from app.schemas.catalog import AuthorCreate, BookCreate
+from app.schemas.catalog import AuthorCreate, BookCopyCreate, BookCopyUpdate, BookCreate
 
 
 class BookAlreadyExistsError(Exception):
@@ -23,6 +23,14 @@ class BookHasLoansError(Exception):
 
 
 class InvalidBookDataError(Exception):
+    pass
+
+
+class CopyCodeExistsError(Exception):
+    pass
+
+
+class CopyOnLoanError(Exception):
     pass
 
 
@@ -134,3 +142,44 @@ def delete_book(db: Session, book: Book) -> None:
     except Exception:
         db.rollback()
         raise
+
+
+def list_copies(db: Session, book_id: int) -> list[BookCopy]:
+    return BookCopyRepository(db).get_by_book(book_id)
+
+
+def get_copy(db: Session, copy_id: int) -> BookCopy | None:
+    return BookCopyRepository(db).get_by_id(copy_id)
+
+
+def create_copy(db: Session, book: Book, data: BookCopyCreate) -> BookCopy:
+    copies = BookCopyRepository(db)
+
+    if copies.get_by_code(data.copy_code):
+        raise CopyCodeExistsError("Υπάρχει ήδη αντίτυπο με αυτόν τον κωδικό.")
+
+    copy = BookCopy(copy_code=data.copy_code, book_id=book.id)
+    copies.add(copy)
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+
+    return copy
+
+
+def update_copy_status(db: Session, copy: BookCopy, data: BookCopyUpdate) -> BookCopy:
+    if copy.status == CopyStatus.ON_LOAN:
+        raise CopyOnLoanError("Το αντίτυπο είναι δανεισμένο. Πρέπει πρώτα να επιστραφεί.")
+
+    copy.status = data.status
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+
+    return copy
