@@ -9,6 +9,7 @@ from app.models.book import Book
 from app.models.book_copy import BookCopy
 from app.models.category import Category
 from app.models.loan import Loan
+from app.models.loan_request import LoanRequest
 from app.models.member import Member
 from app.models.user import User
 
