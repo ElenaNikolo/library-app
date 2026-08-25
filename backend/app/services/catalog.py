@@ -11,6 +11,7 @@ from app.repositories.catalog import (
     CategoryRepository,
 )
 from app.repositories.loans import LoanRepository
+from app.repositories.requests import LoanRequestRepository
 from app.schemas.catalog import AuthorCreate, BookCopyCreate, BookCopyUpdate, BookCreate
 
 
@@ -19,6 +20,10 @@ class BookAlreadyExistsError(Exception):
 
 
 class BookHasLoansError(Exception):
+    pass
+
+
+class BookHasRequestsError(Exception):
     pass
 
 
@@ -134,6 +139,9 @@ def update_book(db: Session, book: Book, data: BookCreate) -> Book:
 def delete_book(db: Session, book: Book) -> None:
     if LoanRepository(db).get_by_book(book.id):
         raise BookHasLoansError("Το βιβλίο έχει ιστορικό δανεισμών και δεν διαγράφεται.")
+
+    if LoanRequestRepository(db).get_by_book(book.id):
+        raise BookHasRequestsError("Το βιβλίο έχει ιστορικό αιτημάτων και δεν διαγράφεται.")
 
     BookRepository(db).delete(book)
 

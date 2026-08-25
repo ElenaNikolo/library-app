@@ -19,6 +19,10 @@ class LoanRequestRepository:
         query = select(LoanRequest).where(LoanRequest.member_id == member_id)
         return list(self.db.scalars(query.order_by(LoanRequest.request_date.desc())))
 
+    def get_by_book(self, book_id: int) -> list[LoanRequest]:
+        query = select(LoanRequest).where(LoanRequest.book_id == book_id)
+        return list(self.db.scalars(query.order_by(LoanRequest.request_date.desc())))
+
     def get_active_for(self, member_id: int, book_id: int) -> LoanRequest | None:
         return self.db.scalars(
             select(LoanRequest).where(

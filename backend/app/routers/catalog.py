@@ -129,6 +129,8 @@ def delete_book(book_id: int, db: Session = Depends(get_db)):
         catalog.delete_book(db, book)
     except catalog.BookHasLoansError as error:
         raise HTTPException(status_code=409, detail=str(error))
+    except catalog.BookHasRequestsError as error:
+        raise HTTPException(status_code=409, detail=str(error))
 
 
 @router.get(
