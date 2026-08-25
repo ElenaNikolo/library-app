@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.models.author import Author
 from app.models.book import Book
-from app.models.book_copy import BookCopy
+from app.models.book_copy import BookCopy, CopyStatus
 from app.models.category import Category
 
 
@@ -89,6 +89,14 @@ class BookCopyRepository:
     def get_by_code(self, copy_code: str) -> BookCopy | None:
         return self.db.scalars(
             select(BookCopy).where(BookCopy.copy_code == copy_code)
+        ).first()
+
+    def get_available_by_book(self, book_id: int) -> BookCopy | None:
+        return self.db.scalars(
+            select(BookCopy).where(
+                BookCopy.book_id == book_id,
+                BookCopy.status == CopyStatus.AVAILABLE,
+            ).order_by(BookCopy.copy_code)
         ).first()
 
     def add(self, copy: BookCopy) -> BookCopy:
