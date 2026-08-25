@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import { request } from '../api'
 
@@ -26,17 +27,19 @@ export default function Catalog() {
       <ul className="books">
         {books.map((book) => (
           <li key={book.id}>
-            <span className="book-title">{book.title}</span>
-            <span className="book-authors">
-              {book.authors.map((a) => `${a.first_name} ${a.last_name}`).join(', ')}
-            </span>
-
-            <div className="book-meta">
-              <span className="chip">{book.category.name}</span>
-              <span className={book.available_copies > 0 ? 'badge' : 'badge empty'}>
-                {book.available_copies} από {book.total_copies} διαθέσιμα
+            <Link to={`/books/${book.id}`} className="book-link">
+              <span className="book-title">{book.title}</span>
+              <span className="book-authors">
+                {book.authors.map((a) => `${a.first_name} ${a.last_name}`).join(', ')}
               </span>
-            </div>
+
+              <div className="book-meta">
+                <span className="chip">{book.category.name}</span>
+                <span className={book.available_copies > 0 ? 'badge' : 'badge empty'}>
+                  {book.available_copies} από {book.total_copies} διαθέσιμα
+                </span>
+              </div>
+            </Link>
           </li>
         ))}
       </ul>

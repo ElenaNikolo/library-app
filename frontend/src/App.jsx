@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './AuthContext'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
+import BookDetail from './pages/BookDetail'
 import Catalog from './pages/Catalog'
 import Login from './pages/Login'
 import MyLoans from './pages/MyLoans'
@@ -15,6 +16,7 @@ export default function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Catalog />} />
+            <Route path="/books/:id" element={<BookDetail />} />
             <Route path="/login" element={<Login />} />
             <Route
               path="/loans"
