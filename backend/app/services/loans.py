@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.models.book_copy import CopyStatus
 from app.models.loan import LOAN_PERIOD_DAYS, Loan, LoanStatus
+from app.models.loan_request import LoanRequest, RequestStatus
 from app.models.user import User
 from app.repositories.catalog import BookCopyRepository
 from app.repositories.loans import LoanRepository
@@ -16,6 +17,10 @@ class InvalidLoanDataError(Exception):
 
 
 class CopyNotAvailableError(Exception):
+    pass
+
+
+class RequestNotApprovedError(Exception):
     pass
 
 
@@ -66,6 +71,37 @@ def create_loan(db: Session, data: LoanCreate) -> Loan:
     LoanRepository(db).add(loan)
 
     try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+
+    return loan
+
+
+def fulfill_request(db: Session, request: LoanRequest) -> Loan:
+    if request.status != RequestStatus.APPROVED:
+        raise RequestNotApprovedError("Το αίτημα δεν είναι εγκεκριμένο.")
+
+    copy = BookCopyRepository(db).get_available_by_book(request.book_id)
+    if copy is None:
+        raise CopyNotAvailableError("Δεν υπάρχει διαθέσιμο αντίτυπο.")
+
+    today = date.today()
+    loan = Loan(
+        member=request.member,
+        book_copy=copy,
+        loan_date=today,
+        due_date=today + timedelta(days=LOAN_PERIOD_DAYS),
+    )
+    copy.status = CopyStatus.ON_LOAN
+    LoanRepository(db).add(loan)
+
+    try:
+        # Το flush δίνει id στο loan, ώστε να το κρατήσει το αίτημα.
+        db.flush()
+        request.status = RequestStatus.FULFILLED
+        request.loan_id = loan.id
         db.commit()
     except Exception:
         db.rollback()
