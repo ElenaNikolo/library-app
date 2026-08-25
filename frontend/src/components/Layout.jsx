@@ -41,6 +41,10 @@ export default function Layout() {
               <>
                 <Link to="/loans" className="nav-link">Οι δανεισμοί μου</Link>
 
+                {user.role === 'MEMBER' && (
+                  <Link to="/requests" className="nav-link">Τα αιτήματά μου</Link>
+                )}
+
                 {['ADMIN', 'LIBRARIAN'].includes(user.role) && (
                   <Link to="/staff/loans" className="nav-link">Δανεισμοί</Link>
                 )}
