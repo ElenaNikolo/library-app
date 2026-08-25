@@ -499,3 +499,11 @@ button:focus-visible {
   font-weight: 500;
   color: var(--muted);
 }
+
+.book-actions {
+  margin-top: 24px;
+}
+
+.book-actions .primary {
+  width: auto;
+}
