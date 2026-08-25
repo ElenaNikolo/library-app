@@ -156,7 +156,7 @@ zorba = Book(
     publication_year=2014,
     description="Η γνωριμία ενός διανοούμενου με τον Αλέξη Ζορμπά στην Κρήτη.",
     category=classics,
-    authors=[Author(first_name="Νίκος", last_name="Καζαντζάκης")],
+    authors=[Author(first_name="Nikos", last_name="Kazantzakis")],
 )
 
 design_patterns = Book(

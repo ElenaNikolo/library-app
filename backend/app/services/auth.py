@@ -63,3 +63,8 @@ def login(db: Session, username: str, password: str) -> str:
         raise AccountDisabledError()
 
     return create_token(user.username)
+
+
+def get_member_id(db: Session, user: User) -> int | None:
+    member = MemberRepository(db).get_by_user_id(user.id)
+    return member.id if member else None
