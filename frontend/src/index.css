@@ -109,6 +109,16 @@ h2 {
   gap: 14px;
 }
 
+.nav-link {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.nav-link:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
 .user {
   display: flex;
   align-items: center;
@@ -378,4 +388,57 @@ button:focus-visible {
   .page {
     padding: 24px 16px 60px;
   }
+}
+
+/* --- Δανεισμοί --- */
+
+.loans {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loans li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.loan-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.loan-code {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.loan-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.badge.overdue {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }

@@ -39,6 +39,8 @@ export default function Layout() {
           <nav>
             {user ? (
               <>
+                <Link to="/loans" className="nav-link">Οι δανεισμοί μου</Link>
+
                 <span className="user">
                   <span className="avatar">{user.username.charAt(0).toUpperCase()}</span>
                   <span className="user-text">
@@ -46,6 +48,7 @@ export default function Layout() {
                     <span className="user-role">{ROLE_LABELS[user.role]}</span>
                   </span>
                 </span>
+
                 <button className="secondary" onClick={logout}>Αποσύνδεση</button>
               </>
             ) : (
