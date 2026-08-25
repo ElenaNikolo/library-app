@@ -19,12 +19,14 @@ class LoanRequestRepository:
         query = select(LoanRequest).where(LoanRequest.member_id == member_id)
         return list(self.db.scalars(query.order_by(LoanRequest.request_date.desc())))
 
-    def get_pending_for(self, member_id: int, book_id: int) -> LoanRequest | None:
+    def get_active_for(self, member_id: int, book_id: int) -> LoanRequest | None:
         return self.db.scalars(
             select(LoanRequest).where(
                 LoanRequest.member_id == member_id,
                 LoanRequest.book_id == book_id,
-                LoanRequest.status == RequestStatus.PENDING,
+                LoanRequest.status.in_(
+                    (RequestStatus.PENDING, RequestStatus.APPROVED)
+                ),
             )
         ).first()
 
