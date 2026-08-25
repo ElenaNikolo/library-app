@@ -41,6 +41,10 @@ export default function Layout() {
               <>
                 <Link to="/loans" className="nav-link">Οι δανεισμοί μου</Link>
 
+                {['ADMIN', 'LIBRARIAN'].includes(user.role) && (
+                  <Link to="/staff/loans" className="nav-link">Δανεισμοί</Link>
+                )}
+
                 <span className="user">
                   <span className="avatar">{user.username.charAt(0).toUpperCase()}</span>
                   <span className="user-text">

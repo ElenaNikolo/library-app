@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Catalog from './pages/Catalog'
 import Login from './pages/Login'
 import MyLoans from './pages/MyLoans'
+import StaffLoans from './pages/StaffLoans'
 
 export default function App() {
   return (
@@ -20,6 +21,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <MyLoans />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/loans"
+              element={
+                <ProtectedRoute roles={['ADMIN', 'LIBRARIAN']}>
+                  <StaffLoans />
                 </ProtectedRoute>
               }
             />
