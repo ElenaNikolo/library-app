@@ -24,7 +24,9 @@ export async function request(path, options = {}) {
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}))
-    const error = new Error(body.detail || 'Κάτι πήγε στραβά')
+    // Στα 422 το detail είναι λίστα σφαλμάτων validation, όχι κείμενο.
+    const detail = typeof body.detail === 'string' ? body.detail : ''
+    const error = new Error(detail || 'Κάτι πήγε στραβά')
     error.status = response.status
     throw error
   }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../AuthContext'
 
@@ -14,6 +14,7 @@ const DEMO_ACCOUNTS = [
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -42,6 +43,10 @@ export default function Login() {
       <form className="auth-card" onSubmit={handleSubmit}>
         <h2>Σύνδεση</h2>
         <p className="subtitle">Εισάγετε τα στοιχεία του λογαριασμού σας</p>
+
+        {location.state?.registered && (
+          <p className="badge">Η εγγραφή ολοκληρώθηκε. Συνδεθείτε με τα στοιχεία σας.</p>
+        )}
 
         {error && <p className="error">{error}</p>}
 
@@ -78,6 +83,10 @@ export default function Login() {
             ))}
           </div>
         </div>
+
+        <p className="subtitle">
+          Δεν έχετε λογαριασμό; <Link to="/register">Εγγραφή</Link>
+        </p>
       </form>
     </div>
   )

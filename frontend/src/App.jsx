@@ -8,6 +8,7 @@ import Catalog from './pages/Catalog'
 import Login from './pages/Login'
 import MyLoans from './pages/MyLoans'
 import MyRequests from './pages/MyRequests'
+import Register from './pages/Register'
 import StaffLoans from './pages/StaffLoans'
 import StaffRequests from './pages/StaffRequests'
 
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="/" element={<Catalog />} />
             <Route path="/books/:id" element={<BookDetail />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
               path="/loans"
               element={
