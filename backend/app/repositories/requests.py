@@ -13,15 +13,18 @@ class LoanRequestRepository:
 
     def get_all(self) -> list[LoanRequest]:
         query = select(LoanRequest)
-        return list(self.db.scalars(query.order_by(LoanRequest.request_date.desc())))
+        query = query.order_by(LoanRequest.request_date.desc(), LoanRequest.id.desc())
+        return list(self.db.scalars(query))
 
     def get_by_member(self, member_id: int) -> list[LoanRequest]:
         query = select(LoanRequest).where(LoanRequest.member_id == member_id)
-        return list(self.db.scalars(query.order_by(LoanRequest.request_date.desc())))
+        query = query.order_by(LoanRequest.request_date.desc(), LoanRequest.id.desc())
+        return list(self.db.scalars(query))
 
     def get_by_book(self, book_id: int) -> list[LoanRequest]:
         query = select(LoanRequest).where(LoanRequest.book_id == book_id)
-        return list(self.db.scalars(query.order_by(LoanRequest.request_date.desc())))
+        query = query.order_by(LoanRequest.request_date.desc(), LoanRequest.id.desc())
+        return list(self.db.scalars(query))
 
     def get_active_for(self, member_id: int, book_id: int) -> LoanRequest | None:
         return self.db.scalars(

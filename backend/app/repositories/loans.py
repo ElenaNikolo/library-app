@@ -20,7 +20,7 @@ class LoanRepository:
         if status:
             query = query.where(Loan.status == status)
 
-        return list(self.db.scalars(query.order_by(Loan.loan_date.desc())))
+        return list(self.db.scalars(query.order_by(Loan.loan_date.desc(), Loan.id.desc())))
 
     def get_by_member(self, member_id: int, status: LoanStatus | None = None) -> list[Loan]:
         query = select(Loan).where(Loan.member_id == member_id)
@@ -28,18 +28,18 @@ class LoanRepository:
         if status:
             query = query.where(Loan.status == status)
 
-        return list(self.db.scalars(query.order_by(Loan.loan_date.desc())))
+        return list(self.db.scalars(query.order_by(Loan.loan_date.desc(), Loan.id.desc())))
 
     def get_by_book(self, book_id: int) -> list[Loan]:
         query = select(Loan).join(BookCopy).where(BookCopy.book_id == book_id)
-        return list(self.db.scalars(query.order_by(Loan.loan_date.desc())))
+        return list(self.db.scalars(query.order_by(Loan.loan_date.desc(), Loan.id.desc())))
 
     def get_overdue(self) -> list[Loan]:
         query = select(Loan).where(
             Loan.status == LoanStatus.ACTIVE,
             Loan.due_date < date.today(),
         )
-        return list(self.db.scalars(query.order_by(Loan.due_date)))
+        return list(self.db.scalars(query.order_by(Loan.due_date, Loan.id)))
 
     def add(self, loan: Loan) -> Loan:
         self.db.add(loan)
