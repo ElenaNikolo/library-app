@@ -10,7 +10,7 @@ export default function BookDetail() {
   const [book, setBook] = useState(null)
   const [error, setError] = useState('')
   const [sending, setSending] = useState(false)
-  const [requested, setRequested] = useState(false)
+  const [myRequests, setMyRequests] = useState(null)
   const [requestError, setRequestError] = useState('')
 
   // Το id έρχεται από το URL, οπότε μπορεί να μην είναι καν αριθμός.
@@ -26,17 +26,29 @@ export default function BookDetail() {
       .catch((err) => setError(err.message))
   }, [id, validId])
 
+  useEffect(() => {
+    if (user?.role !== 'MEMBER') {
+      return
+    }
+
+    request('/api/requests/my')
+      .then(setMyRequests)
+      // Αν το GET αποτύχει δεν ξέρουμε αν υπάρχει ενεργό αίτημα. Δείχνουμε το
+      // κουμπί και αφήνουμε το backend να απορρίψει το POST με 409.
+      .catch(() => setMyRequests([]))
+  }, [user])
+
   async function handleRequest() {
     setSending(true)
     setRequestError('')
 
     try {
-      await request('/api/requests', {
+      const created = await request('/api/requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ book_id: book.id }),
       })
-      setRequested(true)
+      setMyRequests([created, ...myRequests])
     } catch (err) {
       setRequestError(
         err.status === 401 ? 'Η σύνδεσή σας έληξε. Συνδεθείτε ξανά.' : err.message,
@@ -57,6 +69,22 @@ export default function BookDetail() {
   if (!book) {
     return <p className="loading">Φόρτωση...</p>
   }
+
+  if (user?.role === 'MEMBER' && myRequests === null) {
+    return <p className="loading">Φόρτωση...</p>
+  }
+
+  // Το myRequests μένει null για ανώνυμους και για το προσωπικό, που δεν το
+  // φορτώνουν ποτέ. Μετά από logout μπορεί να κρατά ακόμη τα παλιά αιτήματα,
+  // γι' αυτό ελέγχουμε ξανά τον ρόλο.
+  const activeRequest =
+    user?.role === 'MEMBER'
+      ? (myRequests || []).find(
+          (item) =>
+            item.book_id === book.id &&
+            (item.status === 'PENDING' || item.status === 'APPROVED'),
+        )
+      : null
 
   return (
     <div>
@@ -89,13 +117,19 @@ export default function BookDetail() {
           <Link to="/login">Συνδεθείτε για να ζητήσετε το βιβλίο</Link>
         )}
 
-        {user?.role === 'MEMBER' && !requested && (
+        {user?.role === 'MEMBER' && !activeRequest && (
           <button className="primary" onClick={handleRequest} disabled={sending}>
             {sending ? 'Αποστολή...' : 'Αίτημα δανεισμού'}
           </button>
         )}
 
-        {requested && <span className="badge">Το αίτημα καταχωρήθηκε.</span>}
+        {activeRequest && (
+          <span className="badge">
+            {activeRequest.status === 'APPROVED'
+              ? 'Το αίτημά σας έχει εγκριθεί.'
+              : 'Έχετε ήδη ενεργό αίτημα για αυτό το βιβλίο.'}
+          </span>
+        )}
 
         {requestError && <p className="error">{requestError}</p>}
       </div>
