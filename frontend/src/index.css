@@ -154,6 +154,24 @@ h2 {
   color: var(--muted);
 }
 
+/* --- Αναζήτηση καταλόγου --- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.toolbar input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.toolbar .primary {
+  width: auto;
+}
+
 /* --- Κάρτες βιβλίων --- */
 
 .books {
@@ -273,7 +291,8 @@ h2 {
   color: var(--muted);
 }
 
-input {
+input,
+select {
   padding: 11px 13px;
   font: inherit;
   color: var(--text);
@@ -283,11 +302,16 @@ input {
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+select {
+  cursor: pointer;
+}
+
 input::placeholder {
   color: #9ca3af;
 }
 
-input:focus {
+input:focus,
+select:focus {
   outline: none;
   background: var(--surface);
   border-color: var(--accent);
