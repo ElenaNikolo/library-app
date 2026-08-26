@@ -65,3 +65,13 @@ def require_admin(user: User = Depends(get_current_user)) -> User:
         )
 
     return user
+
+
+def require_member(user: User = Depends(get_current_user)) -> User:
+    if user.role != UserRole.MEMBER:
+        raise HTTPException(
+            status_code=403,
+            detail="Απαιτούνται δικαιώματα μέλους",
+        )
+
+    return user

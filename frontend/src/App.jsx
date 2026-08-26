@@ -25,7 +25,7 @@ export default function App() {
             <Route
               path="/loans"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute roles={['MEMBER']}>
                   <MyLoans />
                 </ProtectedRoute>
               }

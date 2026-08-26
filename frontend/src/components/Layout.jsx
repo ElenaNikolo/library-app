@@ -39,7 +39,9 @@ export default function Layout() {
           <nav>
             {user ? (
               <>
-                <Link to="/loans" className="nav-link">Οι δανεισμοί μου</Link>
+                {user.role === 'MEMBER' && (
+                  <Link to="/loans" className="nav-link">Οι δανεισμοί μου</Link>
+                )}
 
                 {user.role === 'MEMBER' && (
                   <Link to="/requests" className="nav-link">Τα αιτήματά μου</Link>

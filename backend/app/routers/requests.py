@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.dependencies import get_current_user, get_db, require_staff
+from app.dependencies import get_db, require_member, require_staff
 from app.models.loan_request import LoanRequest
 from app.models.user import User
 from app.schemas.requests import LoanRequestCreate, LoanRequestResponse
@@ -25,7 +25,7 @@ def request_response(request: LoanRequest) -> LoanRequestResponse:
 @router.post("/requests", response_model=LoanRequestResponse, status_code=201)
 def create_request(
     data: LoanRequestCreate,
-    user: User = Depends(get_current_user),
+    user: User = Depends(require_member),
     db: Session = Depends(get_db),
 ):
     try:
@@ -41,7 +41,7 @@ def create_request(
 
 
 @router.get("/requests/my", response_model=list[LoanRequestResponse])
-def my_requests(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def my_requests(user: User = Depends(require_member), db: Session = Depends(get_db)):
     return [request_response(request) for request in requests.my_requests(db, user)]
 
 

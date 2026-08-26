@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.dependencies import get_current_user, get_db, require_staff
+from app.dependencies import get_db, require_member, require_staff
 from app.models.loan import Loan, LoanStatus
 from app.models.user import User
 from app.schemas.loans import LoanCreate, LoanResponse
@@ -44,7 +44,7 @@ def list_overdue(db: Session = Depends(get_db)):
 
 
 @router.get("/loans/my", response_model=list[LoanResponse])
-def my_loans(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def my_loans(user: User = Depends(require_member), db: Session = Depends(get_db)):
     return [loan_response(loan) for loan in loans.my_loans(db, user)]
 
 
