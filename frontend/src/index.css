@@ -507,3 +507,9 @@ button:focus-visible {
 .book-actions .primary {
   width: auto;
 }
+
+.loan-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}

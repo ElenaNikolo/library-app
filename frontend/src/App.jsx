@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import MyLoans from './pages/MyLoans'
 import MyRequests from './pages/MyRequests'
 import StaffLoans from './pages/StaffLoans'
+import StaffRequests from './pages/StaffRequests'
 
 export default function App() {
   return (
@@ -40,6 +41,14 @@ export default function App() {
               element={
                 <ProtectedRoute roles={['ADMIN', 'LIBRARIAN']}>
                   <StaffLoans />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/requests"
+              element={
+                <ProtectedRoute roles={['ADMIN', 'LIBRARIAN']}>
+                  <StaffRequests />
                 </ProtectedRoute>
               }
             />
