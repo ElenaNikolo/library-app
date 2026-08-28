@@ -15,6 +15,8 @@ export default function StaffLoans() {
   const [loans, setLoans] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [acting, setActing] = useState(null)
+  const [actionError, setActionError] = useState('')
 
   useEffect(() => {
     request('/api/loans')
@@ -22,6 +24,39 @@ export default function StaffLoans() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
   }, [])
+
+  async function returnLoan(id) {
+    setActing(id)
+    setActionError('')
+
+    let done = false
+    let shouldRefresh = false
+
+    try {
+      await request(`/api/loans/${id}/return`, { method: 'POST' })
+      done = true
+    } catch (err) {
+      setActionError(
+        err.status === 401 ? 'Η σύνδεσή σας έληξε. Συνδεθείτε ξανά.' : err.message,
+      )
+      shouldRefresh = err.status === 409
+    }
+
+    if (done || shouldRefresh) {
+      try {
+        setLoans(await request('/api/loans'))
+      } catch {
+        if (done) {
+          setActionError(
+            'Η ενέργεια ολοκληρώθηκε, αλλά η λίστα δεν ανανεώθηκε. Ανανέωσε τη σελίδα.',
+          )
+        }
+        // Αλλιώς κρατάμε το μήνυμα του σφάλματος, που είναι πιο χρήσιμο.
+      }
+    }
+
+    setActing(null)
+  }
 
   if (loading) {
     return <p className="loading">Φόρτωση...</p>
@@ -39,6 +74,8 @@ export default function StaffLoans() {
           {loans.length === 1 ? '1 δανεισμός' : `${loans.length} δανεισμοί`}
         </p>
       </div>
+
+      {actionError && <p className="error">{actionError}</p>}
 
       {loans.length === 0 ? (
         <p className="empty-state">Δεν υπάρχουν δανεισμοί.</p>
@@ -67,6 +104,18 @@ export default function StaffLoans() {
                   <span className="badge overdue">Πρόστιμο {loan.fine_amount} €</span>
                 )}
               </div>
+
+              {loan.status === 'ACTIVE' && (
+                <div className="loan-actions">
+                  <button
+                    className="secondary"
+                    onClick={() => returnLoan(loan.id)}
+                    disabled={acting === loan.id}
+                  >
+                    Επιστροφή
+                  </button>
+                </div>
+              )}
             </li>
           ))}
         </ul>
