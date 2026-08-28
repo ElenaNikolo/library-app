@@ -93,25 +93,27 @@ export default function Register() {
           />
         </label>
 
-        <label className="field">
-          Όνομα
-          <input
-            value={form.first_name}
-            onChange={(e) => update('first_name', e.target.value)}
-            maxLength={60}
-            required
-          />
-        </label>
+        <div className="field-row">
+          <label className="field">
+            Όνομα
+            <input
+              value={form.first_name}
+              onChange={(e) => update('first_name', e.target.value)}
+              maxLength={60}
+              required
+            />
+          </label>
 
-        <label className="field">
-          Επώνυμο
-          <input
-            value={form.last_name}
-            onChange={(e) => update('last_name', e.target.value)}
-            maxLength={60}
-            required
-          />
-        </label>
+          <label className="field">
+            Επώνυμο
+            <input
+              value={form.last_name}
+              onChange={(e) => update('last_name', e.target.value)}
+              maxLength={60}
+              required
+            />
+          </label>
+        </div>
 
         <label className="field">
           Τηλέφωνο (προαιρετικό)
@@ -135,7 +137,7 @@ export default function Register() {
           {sending ? 'Αποστολή...' : 'Εγγραφή'}
         </button>
 
-        <p className="subtitle">
+        <p className="auth-switch">
           Έχετε ήδη λογαριασμό; <Link to="/login">Σύνδεση</Link>
         </p>
       </form>

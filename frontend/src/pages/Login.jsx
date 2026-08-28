@@ -84,7 +84,7 @@ export default function Login() {
           </div>
         </div>
 
-        <p className="subtitle">
+        <p className="auth-switch">
           Δεν έχετε λογαριασμό; <Link to="/register">Εγγραφή</Link>
         </p>
       </form>

@@ -277,7 +277,7 @@ h2 {
 .auth {
   display: flex;
   justify-content: center;
-  padding-top: 32px;
+  padding-top: 20px;
 }
 
 .auth-card {
@@ -302,9 +302,26 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   font-size: 13px;
   font-weight: 500;
+  color: var(--muted);
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field-row .field {
+  flex: 1;
+  min-width: 0;
+}
+
+.auth-switch {
+  margin: 20px 0 0;
+  font-size: 13px;
+  text-align: center;
   color: var(--muted);
 }
 
@@ -441,6 +458,11 @@ button:focus-visible {
 
   .page {
     padding: 24px 16px 60px;
+  }
+
+  .field-row {
+    flex-direction: column;
+    gap: 0;
   }
 }
 
