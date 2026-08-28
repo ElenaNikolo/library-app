@@ -31,5 +31,10 @@ export async function request(path, options = {}) {
     throw error
   }
 
+  // Το DELETE απαντά 204 χωρίς σώμα, οπότε δεν υπάρχει JSON να διαβαστεί.
+  if (response.status === 204) {
+    return null
+  }
+
   return response.json()
 }

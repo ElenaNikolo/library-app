@@ -50,6 +50,10 @@ export default function Layout() {
                 )}
 
                 {['ADMIN', 'LIBRARIAN'].includes(user.role) && (
+                  <NavLink to="/staff/books" className={navClass}>Βιβλία</NavLink>
+                )}
+
+                {['ADMIN', 'LIBRARIAN'].includes(user.role) && (
                   <NavLink to="/staff/loans" className={navClass}>Δανεισμοί</NavLink>
                 )}
 

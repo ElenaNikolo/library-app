@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import MyLoans from './pages/MyLoans'
 import MyRequests from './pages/MyRequests'
 import Register from './pages/Register'
+import StaffBooks from './pages/StaffBooks'
 import StaffLoans from './pages/StaffLoans'
 import StaffRequests from './pages/StaffRequests'
 
@@ -35,6 +36,14 @@ export default function App() {
               element={
                 <ProtectedRoute roles={['MEMBER']}>
                   <MyRequests />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/books"
+              element={
+                <ProtectedRoute roles={['ADMIN', 'LIBRARIAN']}>
+                  <StaffBooks />
                 </ProtectedRoute>
               }
             />
