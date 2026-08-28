@@ -12,7 +12,13 @@ from app.repositories.catalog import (
 )
 from app.repositories.loans import LoanRepository
 from app.repositories.requests import LoanRequestRepository
-from app.schemas.catalog import AuthorCreate, BookCopyCreate, BookCopyUpdate, BookCreate
+from app.schemas.catalog import (
+    AuthorCreate,
+    BookCopyCreate,
+    BookCopyUpdate,
+    BookCreate,
+    CategoryCreate,
+)
 
 
 class BookAlreadyExistsError(Exception):
@@ -39,6 +45,10 @@ class CopyOnLoanError(Exception):
     pass
 
 
+class CategoryAlreadyExistsError(Exception):
+    pass
+
+
 def list_categories(db: Session) -> list[Category]:
     return CategoryRepository(db).get_all()
 
@@ -59,6 +69,23 @@ def count_copies(db: Session, book_id: int) -> tuple[int, int]:
     copies = BookCopyRepository(db).get_by_book(book_id)
     available = sum(1 for copy in copies if copy.status == CopyStatus.AVAILABLE)
     return len(copies), available
+
+
+def create_category(db: Session, data: CategoryCreate) -> Category:
+    repository = CategoryRepository(db)
+    if repository.get_by_name(data.name) is not None:
+        raise CategoryAlreadyExistsError("Υπάρχει ήδη κατηγορία με αυτό το όνομα.")
+
+    category = Category(name=data.name, description=data.description)
+    repository.add(category)
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+
+    return category
 
 
 def create_author(db: Session, data: AuthorCreate) -> Author:

@@ -11,6 +11,7 @@ from app.schemas.catalog import (
     BookCopyUpdate,
     BookCreate,
     BookResponse,
+    CategoryCreate,
     CategoryResponse,
 )
 from app.services import catalog
@@ -36,6 +37,19 @@ def book_response(book: Book, total: int, available: int) -> BookResponse:
 @router.get("/categories", response_model=list[CategoryResponse])
 def list_categories(db: Session = Depends(get_db)):
     return catalog.list_categories(db)
+
+
+@router.post(
+    "/categories",
+    response_model=CategoryResponse,
+    status_code=201,
+    dependencies=[Depends(require_staff)],
+)
+def create_category(data: CategoryCreate, db: Session = Depends(get_db)):
+    try:
+        return catalog.create_category(db, data)
+    except catalog.CategoryAlreadyExistsError as error:
+        raise HTTPException(status_code=409, detail=str(error))
 
 
 @router.get("/authors", response_model=list[AuthorResponse])

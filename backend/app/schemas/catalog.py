@@ -13,6 +13,11 @@ class CategoryResponse(BaseModel):
     description: str | None
 
 
+class CategoryCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    description: str | None = Field(default=None, max_length=255)
+
+
 class AuthorResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -33,7 +38,7 @@ class BookCreate(BaseModel):
     publication_year: int | None = None
     description: str | None = None
     category_id: int
-    author_ids: list[int]
+    author_ids: list[int] = Field(min_length=1)
 
 
 class BookResponse(BaseModel):

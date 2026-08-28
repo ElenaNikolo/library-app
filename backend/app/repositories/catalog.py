@@ -31,7 +31,7 @@ class AuthorRepository:
 
     def get_all(self) -> list[Author]:
         return list(
-            self.db.scalars(select(Author).order_by(Author.last_name, Author.first_name))
+            self.db.scalars(select(Author).order_by(Author.first_name, Author.last_name))
         )
 
     def get_by_ids(self, author_ids: list[int]) -> list[Author]:
