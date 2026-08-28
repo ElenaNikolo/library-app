@@ -484,7 +484,8 @@ button:focus-visible {
   list-style: none;
 }
 
-.loans li {
+/* Το > χρειάζεται γιατί οι κάρτες περιέχουν τη λίστα των αντιτύπων. */
+.loans > li {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -580,6 +581,7 @@ button:focus-visible {
 
 .loan-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 10px;
 }
@@ -655,6 +657,30 @@ button:focus-visible {
 .inline-add input {
   flex: 1;
   min-width: 120px;
+}
+
+/* --- Αντίτυπα --- */
+
+.copies {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.copies ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.copies li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
 /* --- Χρήστες --- */

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { request } from '../api'
+import BookCopies from '../components/BookCopies'
 
 const EMPTY_FORM = {
   isbn: '',
@@ -31,6 +32,9 @@ export default function StaffBooks() {
   const [newAuthor, setNewAuthor] = useState(null)
   const [newCategory, setNewCategory] = useState(null)
   const [adding, setAdding] = useState(false)
+
+  // Το id του βιβλίου του οποίου τα αντίτυπα είναι ανοιχτά, ή null.
+  const [copiesFor, setCopiesFor] = useState(null)
 
   useEffect(() => {
     request('/api/books')
@@ -488,12 +492,20 @@ export default function StaffBooks() {
                 </button>
                 <button
                   className="secondary"
+                  onClick={() => setCopiesFor(copiesFor === book.id ? null : book.id)}
+                >
+                  {copiesFor === book.id ? 'Απόκρυψη αντιτύπων' : 'Αντίτυπα'}
+                </button>
+                <button
+                  className="secondary"
                   onClick={() => remove(book)}
                   disabled={acting === book.id}
                 >
                   Διαγραφή
                 </button>
               </div>
+
+              {copiesFor === book.id && <BookCopies bookId={book.id} />}
             </li>
           ))}
         </ul>
