@@ -656,3 +656,11 @@ button:focus-visible {
   flex: 1;
   min-width: 120px;
 }
+
+/* --- Χρήστες --- */
+
+/* Το select έχει το ύψος των πεδίων φόρμας, εδώ θέλουμε το ύψος του .secondary. */
+.role-select {
+  padding: 7px 13px;
+  font-size: 13px;
+}

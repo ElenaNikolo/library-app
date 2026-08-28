@@ -61,6 +61,10 @@ export default function Layout() {
                   <NavLink to="/staff/requests" className={navClass}>Αιτήματα</NavLink>
                 )}
 
+                {user.role === 'ADMIN' && (
+                  <NavLink to="/admin/users" className={navClass}>Χρήστες</NavLink>
+                )}
+
                 <div className="user-actions">
                   <span className="user">
                     <span className="avatar">{user.username.charAt(0).toUpperCase()}</span>

@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './AuthContext'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdminUsers from './pages/AdminUsers'
 import BookDetail from './pages/BookDetail'
 import Catalog from './pages/Catalog'
 import Login from './pages/Login'
@@ -52,6 +53,14 @@ export default function App() {
               element={
                 <ProtectedRoute roles={['ADMIN', 'LIBRARIAN']}>
                   <StaffLoans />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute roles={['ADMIN']}>
+                  <AdminUsers />
                 </ProtectedRoute>
               }
             />
