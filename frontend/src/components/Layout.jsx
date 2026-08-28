@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 
 import { useAuth } from '../AuthContext'
 
@@ -7,6 +7,8 @@ const ROLE_LABELS = {
   LIBRARIAN: 'Librarian',
   ADMIN: 'Admin',
 }
+
+const navClass = ({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')
 
 export default function Layout() {
   const { user, loading, logout } = useAuth()
@@ -40,30 +42,32 @@ export default function Layout() {
             {user ? (
               <>
                 {user.role === 'MEMBER' && (
-                  <Link to="/loans" className="nav-link">Οι δανεισμοί μου</Link>
+                  <NavLink to="/loans" className={navClass}>Οι δανεισμοί μου</NavLink>
                 )}
 
                 {user.role === 'MEMBER' && (
-                  <Link to="/requests" className="nav-link">Τα αιτήματά μου</Link>
+                  <NavLink to="/requests" className={navClass}>Τα αιτήματά μου</NavLink>
                 )}
 
                 {['ADMIN', 'LIBRARIAN'].includes(user.role) && (
-                  <Link to="/staff/loans" className="nav-link">Δανεισμοί</Link>
+                  <NavLink to="/staff/loans" className={navClass}>Δανεισμοί</NavLink>
                 )}
 
                 {['ADMIN', 'LIBRARIAN'].includes(user.role) && (
-                  <Link to="/staff/requests" className="nav-link">Αιτήματα</Link>
+                  <NavLink to="/staff/requests" className={navClass}>Αιτήματα</NavLink>
                 )}
 
-                <span className="user">
-                  <span className="avatar">{user.username.charAt(0).toUpperCase()}</span>
-                  <span className="user-text">
-                    <strong>{user.username}</strong>
-                    <span className="user-role">{ROLE_LABELS[user.role]}</span>
+                <div className="user-actions">
+                  <span className="user">
+                    <span className="avatar">{user.username.charAt(0).toUpperCase()}</span>
+                    <span className="user-text">
+                      <strong>{user.username}</strong>
+                      <span className="user-role">{ROLE_LABELS[user.role]}</span>
+                    </span>
                   </span>
-                </span>
 
-                <button className="secondary" onClick={logout}>Αποσύνδεση</button>
+                  <button className="secondary" onClick={logout}>Αποσύνδεση</button>
+                </div>
               </>
             ) : (
               <Link to="/login" className="secondary">Σύνδεση</Link>
