@@ -106,11 +106,20 @@ export default function BookDetail() {
 
       <p className="book-description">{book.description}</p>
 
-      <ul className="book-info">
-        <li><strong>ISBN</strong> {book.isbn}</li>
-        <li><strong>Εκδότης</strong> {book.publisher}</li>
-        <li><strong>Έτος έκδοσης</strong> {book.publication_year}</li>
-      </ul>
+      <div className="book-info">
+        <div>
+          <span className="info-label">ISBN</span>
+          {book.isbn}
+        </div>
+        <div>
+          <span className="info-label">Εκδότης</span>
+          {book.publisher}
+        </div>
+        <div>
+          <span className="info-label">Έτος έκδοσης</span>
+          {book.publication_year}
+        </div>
+      </div>
 
       <div className="book-actions">
         {!user && (

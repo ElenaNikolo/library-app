@@ -550,25 +550,39 @@ button:focus-visible {
 }
 
 .book-description {
-  max-width: 60ch;
-  margin: 0 0 24px;
+  max-width: 62ch;
+  margin: 0 0 28px;
+  font-size: 17px;
+  line-height: 1.7;
 }
 
+/* Τρεις στήλες στο desktop, μία στο κινητό μέσω του υπάρχοντος breakpoint. */
 .book-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 570px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
 }
 
-.book-info strong {
-  display: inline-block;
-  width: 130px;
-  font-weight: 500;
+.info-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--muted);
+}
+
+/* Μετά τον κανόνα των τριών στηλών, αλλιώς δεν θα υπερίσχυε. */
+@media (max-width: 560px) {
+  .book-info {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .book-actions {
