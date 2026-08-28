@@ -13,13 +13,19 @@ function formatDate(value) {
 
 export default function MyLoans() {
   const [loans, setLoans] = useState([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
     request('/api/loans/my')
       .then(setLoans)
       .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
   }, [])
+
+  if (loading) {
+    return <p className="loading">Φόρτωση...</p>
+  }
 
   if (error) {
     return <p className="error">{error}</p>
