@@ -12,6 +12,7 @@ export default function BookDetail() {
   const [sending, setSending] = useState(false)
   const [myRequests, setMyRequests] = useState(null)
   const [requestError, setRequestError] = useState('')
+  const [justSent, setJustSent] = useState(false)
 
   // Το id έρχεται από το URL, οπότε μπορεί να μην είναι καν αριθμός.
   const validId = /^\d+$/.test(id)
@@ -49,6 +50,7 @@ export default function BookDetail() {
         body: JSON.stringify({ book_id: book.id }),
       })
       setMyRequests([created, ...myRequests])
+      setJustSent(true)
     } catch (err) {
       setRequestError(
         err.status === 401 ? 'Η σύνδεσή σας έληξε. Συνδεθείτε ξανά.' : err.message,
@@ -136,7 +138,9 @@ export default function BookDetail() {
           <span className="badge">
             {activeRequest.status === 'APPROVED'
               ? 'Το αίτημά σας έχει εγκριθεί.'
-              : 'Έχετε ήδη ενεργό αίτημα για αυτό το βιβλίο.'}
+              : justSent
+                ? 'Το αίτημά σας καταχωρήθηκε.'
+                : 'Έχετε ήδη ενεργό αίτημα για αυτό το βιβλίο.'}
           </span>
         )}
 
